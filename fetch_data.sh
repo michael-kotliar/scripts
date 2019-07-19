@@ -48,18 +48,30 @@ get_annotation () {
     gunzip refGene.txt.gz
     echo -e "Add chrM"
     case $GEN in
-      "mm10") CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/wgEncodeGencodeBasicVM18.txt.gz" ;;
-      "hg19") CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/wgEncodeGencodeBasicV19.txt.gz" ;;
-      "hg38") CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/wgEncodeGencodeBasicV28.txt.gz" ;;
+      "mm10")
+        CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/wgEncodeGencodeBasicVM18.txt.gz"
+        FILTER=${MM10_CHRS[@]}
+        ;;
+      "hg19")
+        CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/wgEncodeGencodeBasicV19.txt.gz"
+        FILTER=${HG19_CHRS[@]}
+        ;;
+      "hg38")
+        CHR_M="ftp://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/wgEncodeGencodeBasicV28.txt.gz"
+        FILTER=${HG38_CHRS[@]}
+        ;;
     esac
     wget -q --show-progress -O ${GEN}_chrM.txt.gz $CHR_M
     gunzip ${GEN}_chrM.txt.gz
-    cat ${GEN}_chrM.txt | grep "chrM" >> refGene.txt
+    cat ${GEN}_chrM.txt | awk '{ if ($3=="chrM") print $0 }' >> refGene.txt
     rm -f ${GEN}_chrM.txt
+    echo "Filter refGene.txt to include only $FILTER"
+    cat refGene.txt | awk -v filter="$FILTER" 'BEGIN {split(filter, f); for (i in f) d[f[i]]} {if ($3 in d) print $0}' > refGene_filtered.txt
+    mv refGene_filtered.txt refGene.txt
     echo "Convert refGene.txt to refgene.gtf"
     docker run --rm -ti -v `pwd`:/tmp/ biowardrobe2/ucscuserapps:v358 /bin/bash -c "cut -f 2- refGene.txt | genePredToGtf file stdin refgene.gtf"
+    echo "Rename refGene.txt to refgene.tsv, add header"
     echo -e "bin\tname\tchrom\tstrand\ttxStart\ttxEnd\tcdsStart\tcdsEnd\texonCount\texonStarts\texonEnds\tscore\tname2\tcdsStartStat\tcdsEndStat\texonFrames" > refgene.tsv
-    echo "Add header to refgene.gtf"
     cat refGene.txt >> refgene.tsv
     rm -f refGene.txt
   fi
