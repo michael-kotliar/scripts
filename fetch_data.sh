@@ -15,6 +15,7 @@ get_fasta () {
   if [ ! -f "ribo.fa" ] ; then
     echo "Process ribosomal"
     wget -q --show-progress https://biowardrobe.cchmc.org/indices/genomes/${GEN}/ribo.fa
+    docker run --rm -ti -v `pwd`:/tmp/ biowardrobe2/samtools:v1.4 samtools faidx ribo.fa
   fi
   if [ ! -f ${GEN}.fa ] ; then
     for C in ${CHR[@]} ; do
@@ -29,6 +30,8 @@ get_fasta () {
         rm -f ${C}.fa
       fi
     done
+    docker run --rm -ti -v `pwd`:/tmp/ biowardrobe2/samtools:v1.4 samtools faidx ${GEN}.fa
+    docker run --rm -ti -v `pwd`:/tmp/ biowardrobe2/samtools:v1.4 samtools faidx chrM.fa
   fi
   cd $CUR
   echo "Leaving $DIR"
@@ -80,11 +83,11 @@ get_annotation () {
 }
 
 
-get_annotation "mm10" "./genome_indices/inputs/mm10/annotation"
+# get_annotation "mm10" "./genome_indices/inputs/mm10/annotation"
 get_fasta      "mm10" "./genome_indices/inputs/mm10/fasta" ${MM10_CHRS[@]}
-
-get_annotation "hg38" "./genome_indices/inputs/hg38/annotation"
-get_fasta      "hg38" "./genome_indices/inputs/hg38/fasta" ${HG38_CHRS[@]}
-
-get_annotation "hg19" "./genome_indices/inputs/hg19/annotation"
-get_fasta      "hg19" "./genome_indices/inputs/hg19/fasta" ${HG19_CHRS[@]}
+#
+# get_annotation "hg38" "./genome_indices/inputs/hg38/annotation"
+# get_fasta      "hg38" "./genome_indices/inputs/hg38/fasta" ${HG38_CHRS[@]}
+#
+# get_annotation "hg19" "./genome_indices/inputs/hg19/annotation"
+# get_fasta      "hg19" "./genome_indices/inputs/hg19/fasta" ${HG19_CHRS[@]}
