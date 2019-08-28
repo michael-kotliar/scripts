@@ -83,11 +83,11 @@ get_annotation () {
 }
 
 
-# get_annotation "mm10" "./genome_indices/inputs/mm10/annotation"
+get_annotation "mm10" "./genome_indices/inputs/mm10/annotation"
 get_fasta      "mm10" "./genome_indices/inputs/mm10/fasta" ${MM10_CHRS[@]}
-#
-# get_annotation "hg38" "./genome_indices/inputs/hg38/annotation"
-# get_fasta      "hg38" "./genome_indices/inputs/hg38/fasta" ${HG38_CHRS[@]}
-#
-# get_annotation "hg19" "./genome_indices/inputs/hg19/annotation"
-# get_fasta      "hg19" "./genome_indices/inputs/hg19/fasta" ${HG19_CHRS[@]}
+
+get_annotation "hg38" "./genome_indices/inputs/hg38/annotation"
+get_fasta      "hg38" "./genome_indices/inputs/hg38/fasta" ${HG38_CHRS[@]}
+
+get_annotation "hg19" "./genome_indices/inputs/hg19/annotation"
+get_fasta      "hg19" "./genome_indices/inputs/hg19/fasta" ${HG19_CHRS[@]}
