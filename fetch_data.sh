@@ -37,6 +37,21 @@ get_fasta () {
   echo "Leaving $DIR"
 }
 
+get_cytoband () {
+  CUR=`pwd`
+  GEN=$1
+  DIR=$2
+  echo -e "\nDownload cytoband for $GEN into $DIR"
+  mkdir -p $DIR && cd $DIR
+  echo -e "\nEntering $DIR"
+  if [ ! -f "cytoBandIdeo.txt" ] ; then
+    echo -e "Process cytoBandIdeo.txt.gz"
+    wget -q --show-progress http://hgdownload.cse.ucsc.edu/goldenPath/${GEN}/database/cytoBandIdeo.txt.gz
+    gunzip cytoBandIdeo.txt.gz
+  fi
+  cd $CUR
+  echo "Leaving $DIR"
+}
 
 get_annotation () {
   CUR=`pwd`
@@ -85,9 +100,13 @@ get_annotation () {
 
 get_annotation "mm10" "./genome_indices/inputs/mm10/annotation"
 get_fasta      "mm10" "./genome_indices/inputs/mm10/fasta" ${MM10_CHRS[@]}
+get_cytoband   "mm10" "./genome_indices/inputs/mm10/cytoband"
 
 get_annotation "hg38" "./genome_indices/inputs/hg38/annotation"
 get_fasta      "hg38" "./genome_indices/inputs/hg38/fasta" ${HG38_CHRS[@]}
+get_cytoband   "hg38" "./genome_indices/inputs/hg38/cytoband"
 
 get_annotation "hg19" "./genome_indices/inputs/hg19/annotation"
 get_fasta      "hg19" "./genome_indices/inputs/hg19/fasta" ${HG19_CHRS[@]}
+get_cytoband   "hg19" "./genome_indices/inputs/hg19/cytoband"
+
