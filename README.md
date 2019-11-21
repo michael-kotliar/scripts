@@ -43,3 +43,10 @@ the results will be saved in the current directory as `./genome_indices` folder 
             ...
 ```
 If directory `./genome_indices` already exist, skip downloading.
+
+
+### Filter FASTQ files by barcodes for SPLiT-seq analysis
+
+**General info**
+
+Outputs two compressed fastq files with reads that passed filtering criteria. Filters are applied only on the sequence from the read 2.
