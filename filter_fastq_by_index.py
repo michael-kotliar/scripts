@@ -106,8 +106,8 @@ def run_filtering(args):
                                     scanned1_seq = index1_record["sequence"][args.start:args.start+args.length]
                                     scanned2_seq = index2_record["sequence"][args.start:args.start+args.length]
                                     if compiled_regex1.search(scanned1_seq) and compiled_regex2.search(scanned2_seq):
-                                        f1_record["name"] = f1_record["name"] + " " + index1_record["sequence"] + " " + index2_record["sequence"]
-                                        f2_record["name"] = f2_record["name"] + " " + index1_record["sequence"] + " " + index2_record["sequence"]
+                                        f1_record["name"] = f1_record["name"].replace(" ", "_") + "_" + index1_record["sequence"] + "_" + index2_record["sequence"]
+                                        f2_record["name"] = f2_record["name"].replace(" ", "_") + "_" + index1_record["sequence"] + "_" + index2_record["sequence"]
                                         f1_output_stream.write(("\n".join([ f1_record["name"], f1_record["sequence"], f1_record["strand"], f1_record["quality"]])+"\n").encode("utf-8"))
                                         f2_output_stream.write(("\n".join([ f2_record["name"], f2_record["sequence"], f2_record["strand"], f2_record["quality"]])+"\n").encode("utf-8"))
                                     f1_read_data = []
